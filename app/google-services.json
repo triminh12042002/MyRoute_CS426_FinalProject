@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "873314289219",
+    "project_id": "myroutecs426finalproject-876b0",
+    "storage_bucket": "myroutecs426finalproject-876b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873314289219:android:34546f2af9230469ad36f6",
+        "android_client_info": {
+          "package_name": "com.example.myroute_cs426_finalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "873314289219-keg5vtbt267e77458p19rgaa3b0ef2fd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_1_AfMZOqfC5cZmHmFMhlj_y2nkcoxXE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "873314289219-keg5vtbt267e77458p19rgaa3b0ef2fd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

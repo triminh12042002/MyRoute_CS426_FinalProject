@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.myroute_cs426_finalproject">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +18,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyRoute_CS426_FinalProject"
         tools:targetApi="31">
+        <activity
+            android:name=".SignUp"
+            android:exported="false"/>
+        <activity
+            android:name=".Login"
+            android:exported="false">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
