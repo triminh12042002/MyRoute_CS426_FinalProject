@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,8 +30,10 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -55,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
     private boolean requestingLocationUpdates = true;
+    private Button buttonTracking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +71,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         tv_lat = findViewById(R.id.tv_lat);
         tv_lon = findViewById(R.id.tv_lon);
         sw_locationupdates = findViewById(R.id.sw_locationupdates);
+        buttonTracking = findViewById(R.id.buttonTracking);
 
-        locationRequest = new LocationRequest();
+        locationRequest = LocationRequest.create();
 
         // how often does the default location check occur
         locationRequest.setInterval(DEFAULT_UPDATE_INTERVAL * 1000);
@@ -75,12 +81,21 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         //how often does the location check occur when set to the most frequent update
         locationRequest.setFastestInterval(FAST_UPDATE_INTERVAL * 1000);
 
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setPriority(Priority.PRIORITY_HIGH_ACCURACY);
 
         locationRequest.setSmallestDisplacement(2);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
 
+//        buttonTracking.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //routeModel.setLocationList(locationList);
+//                Intent intent = new Intent(MainActivity.this, MapsFragment.class);
+//                //.putExtra("RouteModel",routeModel);
+//                startActivity(intent);
+//            }
+//        });
         // location will update when meet the interval
         locationCallback = new LocationCallback() {
             @Override
@@ -89,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
                 // save the  location
                 Location location = locationResult.getLastLocation();
-                if(location != null){
+                if (location != null) {
                     UpdateUIValues(location);
                 }
             }
@@ -114,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         List<RouteModel> routeModelList = getRouteModelList();
         initRecyclerView(routeModelList);
+
 
     }   // onCreate method
 
@@ -247,15 +263,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if (location != null) {
             tv_lat.setText("Lat: " + String.valueOf(location.getLatitude()));
             tv_lon.setText("Long: " + String.valueOf(location.getLongitude()));
-            Log.w("current location " , locationList.size() + ": "+ String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude()));
             locationList.add(location);
+            Log.w("current location " , locationList.size() + ": "+ String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude()));
         }
-
     }
 
 
     @Override
     public void onItemClick(RouteModel routeModel) {
-        
+        routeModel.setLocationList(locationList);
+        Intent intent = new Intent(MainActivity.this, PolyActivity.class);
+        intent.putExtra("RouteModel",routeModel);
+        startActivity(intent);
     }
 }
