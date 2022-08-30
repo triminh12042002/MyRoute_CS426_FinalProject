@@ -247,8 +247,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if (location != null) {
             tv_lat.setText("Lat: " + String.valueOf(location.getLatitude()));
             tv_lon.setText("Long: " + String.valueOf(location.getLongitude()));
-            Log.w("current location " , locationList.size() + ": "+ String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude()));
             locationList.add(location);
+            Log.w("current location " , locationList.size() + ": "+ String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude()));
+
         }
 
     }
