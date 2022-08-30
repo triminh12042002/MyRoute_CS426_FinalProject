@@ -5,21 +5,41 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 public class RouteModel  implements Parcelable{
     private String name;
-    private String imageUrl;
+    private String info;
+    private String[] latlngs;
     private List<Location> locationList;
-    private List<Location> bookmarkList;
     private Bitmap routeImage;
+
+    public RouteModel(){};
+    public RouteModel(List<Location> locationList){
+        this.locationList = locationList;
+    };
 
     protected RouteModel(Parcel in) {
         name = in.readString();
-        imageUrl = in.readString();
+        info = in.readString();
         locationList = in.createTypedArrayList(Location.CREATOR);
-        bookmarkList = in.createTypedArrayList(Location.CREATOR);
+        latlngs = in.createStringArray();
         routeImage = in.readParcelable(Bitmap.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(info);
+        dest.writeTypedList(locationList);
+        dest.writeStringArray(latlngs);
+        dest.writeParcelable(routeImage, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<RouteModel> CREATOR = new Creator<RouteModel>() {
@@ -50,13 +70,7 @@ public class RouteModel  implements Parcelable{
         this.locationList = locationList;
     }
 
-    public List<Location> getBookmarkList() {
-        return bookmarkList;
-    }
 
-    public void setBookmarkList(List<Location> bookmarkList) {
-        this.bookmarkList = bookmarkList;
-    }
 
     public Bitmap getRouteImage() {
         return routeImage;
@@ -66,26 +80,20 @@ public class RouteModel  implements Parcelable{
         this.routeImage = routeImage;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+
+    public String getInfo() {
+        return info;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(imageUrl);
-        dest.writeTypedList(locationList);
-        dest.writeTypedList(bookmarkList);
-        dest.writeParcelable(routeImage, flags);
+    public void setInfo(String info) {
+        this.info = info;
     }
 
-
-    public String getImageUrl() {
-        return imageUrl;
+    public String[] getLatlngs() {
+        return latlngs;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setLatlngs(String[] latlngs) {
+        this.latlngs = latlngs;
     }
 }

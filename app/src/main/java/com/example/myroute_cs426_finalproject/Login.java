@@ -3,6 +3,7 @@ package com.example.myroute_cs426_finalproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +23,7 @@ public class Login extends AppCompatActivity {
     private EditText passwordET;
     private Button loginButton;
     private Button signUpButton;
+    private Button offlineButton;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDbRef;
@@ -36,6 +38,7 @@ public class Login extends AppCompatActivity {
         passwordET = findViewById(R.id.passwordET);
         loginButton = findViewById(R.id.loginButton);
         signUpButton = findViewById(R.id.signUpButton);
+        offlineButton = findViewById(R.id.offlineButton);
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +61,13 @@ public class Login extends AppCompatActivity {
 
             }
 
+        });
+        offlineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, MainActivity.class);
+                startActivity(intent);
+            }
         });
 
     }

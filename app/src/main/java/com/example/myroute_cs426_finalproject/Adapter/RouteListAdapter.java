@@ -38,6 +38,7 @@ public class RouteListAdapter extends RecyclerView.Adapter<RouteListAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.routeName.setText(routeModelList.get(position).getName());
+        holder.routeInfo.setText(routeModelList.get(position).getInfo());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,11 +55,11 @@ public class RouteListAdapter extends RecyclerView.Adapter<RouteListAdapter.MyVi
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView routeName;
-        ImageView routeImage;
+        TextView routeInfo;
         public MyViewHolder(View view){
             super(view);
             routeName = view.findViewById(R.id.routeName);
-            routeImage = view.findViewById(R.id.routeImage);
+            routeInfo= view.findViewById(R.id.routeInfo);
         }
     }
 

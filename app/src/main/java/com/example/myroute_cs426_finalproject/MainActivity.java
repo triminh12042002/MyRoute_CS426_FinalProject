@@ -7,15 +7,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +28,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     private TextView tv_lat, tv_lon;
     private Switch sw_locationupdates;
+    private EditText nameET, infoET;
     private static final int DEFAULT_UPDATE_INTERVAL = 4;
     private static final int FAST_UPDATE_INTERVAL = 1;
     private static final int PERMISSION_FINE_LOCATION = 99;
@@ -54,7 +56,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     // Google's API for location services
     FusedLocationProviderClient fusedLocationProviderClient;
     private LocationCallback locationCallback;
-    private boolean requestingLocationUpdates = true;
+    private boolean requestingLocationUpdates = false;
+    private boolean requestTracking = false;
+    private Button buttonStartTracking;
+    private Button buttonStopTracking;
+    private List<RouteModel> routeModelList;
+    private RouteListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +73,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         tv_lat = findViewById(R.id.tv_lat);
         tv_lon = findViewById(R.id.tv_lon);
         sw_locationupdates = findViewById(R.id.sw_locationupdates);
+        buttonStartTracking = findViewById(R.id.buttonStartTracking);
+        buttonStopTracking = findViewById(R.id.buttonStopTracking);
+        buttonStopTracking.setEnabled(false);
+        nameET = findViewById(R.id.nameET);
+        infoET = findViewById(R.id.infoET);
 
-        locationRequest = new LocationRequest();
+        locationRequest = LocationRequest.create();
 
         // how often does the default location check occur
         locationRequest.setInterval(DEFAULT_UPDATE_INTERVAL * 1000);
@@ -75,12 +87,44 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         //how often does the location check occur when set to the most frequent update
         locationRequest.setFastestInterval(FAST_UPDATE_INTERVAL * 1000);
 
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setPriority(Priority.PRIORITY_HIGH_ACCURACY);
 
         locationRequest.setSmallestDisplacement(2);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
 
+        buttonStartTracking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                requestTracking = true;
+                startLocationUpdates();
+                //routeModel.setLocationList(locationList);
+                //Intent intent = new Intent(MainActivity.this, MapsFragment.class);
+                //.putExtra("RouteModel",routeModel);
+                //startActivity(intent);
+                buttonStartTracking.setEnabled(false);
+                buttonStopTracking.setEnabled(true);
+                sw_locationupdates.setChecked(true);
+                nameET.setText("");
+                infoET.setText("");
+                nameET.setEnabled(true);
+                infoET.setEnabled(true);
+
+            }
+        });
+        buttonStopTracking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestTracking = false;
+                stopLocationUpdates();
+                buttonStartTracking.setEnabled(true);
+                buttonStopTracking.setEnabled(false);
+                nameET.setEnabled(false);
+                infoET.setEnabled(false);
+                addNewRouteModel();
+            }
+        });
         // location will update when meet the interval
         locationCallback = new LocationCallback() {
             @Override
@@ -89,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
                 // save the  location
                 Location location = locationResult.getLastLocation();
-                if(location != null){
+                if (location != null) {
                     UpdateUIValues(location);
                 }
             }
@@ -108,15 +152,42 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 }
             }
         });
-        startLocationUpdates();
-        stopLocationUpdates();
+        //startLocationUpdates();
+        //stopLocationUpdates();
         //updateGPS();
 
-        List<RouteModel> routeModelList = getRouteModelList();
-        initRecyclerView(routeModelList);
+        routeModelList = new ArrayList<>(getRouteModelList());
+        if(routeModelList != null)
+            initRecyclerView(routeModelList);
+        else{
+            Toast.makeText(this, "routeModelList is empty", Toast.LENGTH_SHORT).show();
+        }
 
     }   // onCreate method
 
+    private void addNewRouteModel() {
+        RouteModel routeModel = new RouteModel();
+        routeModel.setLocationList(locationList);
+        int size = locationList.size();
+        String[] latlngs = new String[size];
+        for(int i = 0; i < size; ++i){
+            latlngs[i] = locationList.get(i).getLatitude() + "," + locationList.get(i).getLongitude();
+        }
+        routeModel.setName(nameET.getText().toString());
+        routeModel.setInfo(infoET.getText().toString());
+        routeModel.setLatlngs(latlngs);
+        Log.w("routeModelList", String.valueOf(routeModelList.size()));
+
+        if(!routeModelList.isEmpty()) {
+            routeModelList.add(routeModel);
+        }
+
+        adapter.updateData(routeModelList);
+    }
+
+    private void WriteRouteModelListDataToFile(List<RouteModel> routeModelList){
+
+    }
 
     private List<RouteModel> getRouteModelList() {
 //        InputStream is = getResources().openRawResource(R.raw.store);
@@ -132,16 +203,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Location l;
+
         Gson gson = new Gson();
-        RouteModel[] storeModels = gson.fromJson(jsonString, RouteModel[].class);
-        List<RouteModel> routeModelList = Arrays.asList(storeModels);
+        RouteModel[] routeModels = gson.fromJson(jsonString, RouteModel[].class);
+        List<RouteModel> routeModelList = Arrays.asList(routeModels);
         return routeModelList;
     }
 
     private void initRecyclerView(List<RouteModel> routeModelList) {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        RouteListAdapter adapter = new RouteListAdapter(routeModelList, this);
+        adapter = new RouteListAdapter(routeModelList, this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -183,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }
 
     void startLocationUpdates() {
+        requestingLocationUpdates = true;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             Toast.makeText(this, "Permission is denied", Toast.LENGTH_SHORT).show();
@@ -203,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }
 
     private void stopLocationUpdates() {
+        requestingLocationUpdates = false;
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
@@ -247,16 +322,33 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if (location != null) {
             tv_lat.setText("Lat: " + String.valueOf(location.getLatitude()));
             tv_lon.setText("Long: " + String.valueOf(location.getLongitude()));
-            locationList.add(location);
+            if(requestTracking){
+                locationList.add(location);
+            }
             Log.w("current location " , locationList.size() + ": "+ String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude()));
-
         }
-
     }
 
 
     @Override
     public void onItemClick(RouteModel routeModel) {
-        
+        List<Location> locationList = new ArrayList<>();
+        String[] latlngs = routeModel.getLatlngs();
+        String[] latlong;
+        Location location;
+        for(String latlng : latlngs){
+            latlong =  latlng.split(",");
+            double latitude = Double.parseDouble(latlong[0]);
+            double longitude = Double.parseDouble(latlong[1]);
+            location = new Location("");
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+            locationList.add(location);
+        }
+
+        routeModel.setLocationList(locationList);
+        Intent intent = new Intent(MainActivity.this, PolyActivity.class);
+        intent.putExtra("RouteModel",routeModel);
+        startActivity(intent);
     }
 }
