@@ -18,27 +18,28 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center_vertical"
-            android:background="#fff0f5"
+            android:background="#00ffff"
             >
 
             <TextView
                 android:id="@+id/routeName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="#fff0f5"
+                android:background="@color/white"
                 android:text="Name of route"
                 android:textSize="20dp"
                 android:textStyle="bold"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textColor="#0000ff"/>
 
             <TextView
                 android:id="@+id/routeInfo"
-                android:background="#c0c0c0"
-                android:textColor="@color/black"
+                android:background="#0000ff"
+                android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
+                android:padding="8dp"
+                android:textSize="16dp"
                 />
         </LinearLayout>
 
