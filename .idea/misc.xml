@@ -14,9 +14,13 @@
         <entry key="..\:/Android/AndroidStudioProjects/MyRoute_CS426_FinalProject/app/src/main/res/layout/user_layout.xml" value="0.1" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MyRoute_CS426_FinalProject7/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MyRoute_CS426_FinalProject7/app/src/main/res/layout/activity_login.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyRoute_CS426_FinalProject7/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyRoute_CS426_FinalProject7/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyRoute_CS426_FinalProject7/app/src/main/res/layout/activity_poly.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyRoute_CS426_FinalProject7/app/src/main/res/layout/activity_sign_up.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MyRoute_CS426_FinalProject7/app/src/main/res/layout/activity_splash.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyRoute_CS426_FinalProject7/app/src/main/res/layout/recycler_row.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyRoute_CS426_FinalProject7/app/src/main/res/layout/fragment_maps.xml" value="0.1334853090172239" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyRoute_CS426_FinalProject7/app/src/main/res/layout/recycler_row.xml" value="0.2" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyRoute_CS426_FinalProject7/app/src/main/res/layout/user_layout.xml" value="0.27447916666666666" />
       </map>
     </option>
   </component>

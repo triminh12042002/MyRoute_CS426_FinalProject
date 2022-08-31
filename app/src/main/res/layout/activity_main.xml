@@ -10,25 +10,34 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="108dp"
         android:text="Your current location"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="#40e0d0"
+        android:textSize="20dp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tv_lat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:text="Lat:"
-        app:layout_constraintTop_toBottomOf="@+id/title"
+        android:textSize="18dp"
         app:layout_constraintStart_toStartOf="parent"
-/>
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
     <TextView
         android:id="@+id/tv_lon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:text="Long:"
+        android:textSize="18dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
+
     <Switch
         android:id="@+id/sw_locationupdates"
         android:text="Update location"
@@ -40,7 +49,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/tv_lon"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        android:textColor="#40e0d0"
+        android:textSize="20dp"/>
     <Button
         android:id="@+id/buttonStartTracking"
         android:text="Start new route"
